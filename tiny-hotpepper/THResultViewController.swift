@@ -50,11 +50,14 @@ class THResultViewController: UIViewController, UICollectionViewDataSource, UICo
                 // TODO: refactoring 入れ子辞書の探索. もっといい方法があるはず.
                 let response = responseObject as! Dictionary<String, AnyObject>
                 let results_ = response["results"] as! Dictionary<String, AnyObject>
-                let items = results_["shop"] as! Array<Dictionary<String, AnyObject>>
-                for item in items {
-                    self.shops.append(THShop(dict:item))
+                if let items = results_["shop"] as? Array<Dictionary<String, AnyObject>> {
+                    for item in items {
+                        self.shops.append(THShop(dict:item))
+                    }
+                    self.collectionView.reloadData()
+                }else{
+                    NSLog("検索結果0件です")
                 }
-                self.collectionView.reloadData()
             }, failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
                 NSLog("error: \(error)")
         })

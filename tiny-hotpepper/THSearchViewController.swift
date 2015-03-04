@@ -8,14 +8,16 @@
 
 import UIKit
 import FlatUIKit
+import CoreLocation
 
-class THSearchViewController: UIViewController, UITextFieldDelegate {
-
+class THSearchViewController: UIViewController, UITextFieldDelegate, CLLocationManagerDelegate {
+    
     @IBOutlet weak var searchButton: FUIButton!
     @IBOutlet weak var searchTextField: UITextField!
     
     var latitude: Float = 0.0
     var longtitude: Float = 0.0
+    var manager: CLLocationManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +35,14 @@ class THSearchViewController: UIViewController, UITextFieldDelegate {
         
         self.latitude = 0.0
         self.longtitude = 0.0
+        
+        manager = CLLocationManager()
+        manager.delegate = self
+        if manager.respondsToSelector("requestWhenInUseAuthorization") {
+            manager.requestWhenInUseAuthorization()
+        }
+        manager.startUpdatingLocation()
+        
     }
     
     func searchShop() {
@@ -44,10 +54,26 @@ class THSearchViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
+        if self.latitude == 0.0 {
+            var alert: UIAlertController = UIAlertController(title: "現在の位置を取得できません", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+            let tokyo: UIAlertAction = UIAlertAction(title: "東京駅周辺を検索", style: UIAlertActionStyle.Default, handler: { (action:UIAlertAction!) -> Void in
+                var resultVC = self.storyboard?.instantiateViewControllerWithIdentifier("THResultViewController") as! THResultViewController
+                resultVC.keyword = self.searchTextField.text
+                resultVC.latitude = 35.681
+                resultVC.longtitude = 139.766
+                self.navigationController?.pushViewController(resultVC, animated: true)
+            })
+            let cancel: UIAlertAction = UIAlertAction(title: "キャンセル", style: UIAlertActionStyle.Cancel, handler:{ (action:UIAlertAction!) -> Void in
+                return
+            })
+            alert.addAction(cancel)
+            presentViewController(alert, animated: true, completion: nil)
+        }
+        
         var resultVC = self.storyboard?.instantiateViewControllerWithIdentifier("THResultViewController") as! THResultViewController
         resultVC.keyword = self.searchTextField.text
-        resultVC.latitude = 35.681
-        resultVC.longtitude = 139.766
+        resultVC.latitude = self.latitude
+        resultVC.longtitude = self.longtitude
         self.navigationController?.pushViewController(resultVC, animated: true)
     }
     
@@ -60,7 +86,18 @@ class THSearchViewController: UIViewController, UITextFieldDelegate {
         self.searchShop()
         return true
     }
-
+    
+    func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        if status == CLAuthorizationStatus.AuthorizedWhenInUse {
+            manager.startUpdatingLocation()
+        }
+    }
+    
+    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
+        self.latitude = Float(manager.location.coordinate.latitude)
+        self.longtitude = Float(manager.location.coordinate.longitude)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

@@ -11,4 +11,9 @@ import UIKit
 class THResultCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
+    
+    override func awakeFromNib() {
+        self.layer.cornerRadius = 5.0
+        self.clipsToBounds = true
+    }
 }

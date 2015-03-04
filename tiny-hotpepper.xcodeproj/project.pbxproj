@@ -19,6 +19,7 @@
 		762A407B1AA8D678007369EA /* THShop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 762A407A1AA8D678007369EA /* THShop.swift */; };
 		762A407D1AA8D6FB007369EA /* THResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 762A407C1AA8D6FB007369EA /* THResultCell.swift */; };
 		7688BA7B1AAA3D090032313A /* THResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7688BA7A1AAA3D090032313A /* THResultViewController.swift */; };
+		76EDFD391AAA83C2003952A7 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 769626151AAA6CE300D76633 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76EDFD391AAA83C2003952A7 /* CoreLocation.framework in Frameworks */,
 				44FA77B701FE537F4E48EB10 /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
