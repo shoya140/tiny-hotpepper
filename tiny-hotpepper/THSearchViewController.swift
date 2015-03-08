@@ -33,8 +33,8 @@ class THSearchViewController: UIViewController, UITextFieldDelegate, CLLocationM
         self.searchButton.setTitleColor(UIColor.cloudsColor(), forState: UIControlState.Normal)
         self.searchButton.setTitleColor(UIColor.cloudsColor(), forState: UIControlState.Highlighted)
         
-        self.latitude = 0.0
-        self.longtitude = 0.0
+        latitude = 0.0
+        longtitude = 0.0
         
         manager = CLLocationManager()
         manager.delegate = self
@@ -54,9 +54,10 @@ class THSearchViewController: UIViewController, UITextFieldDelegate, CLLocationM
             return
         }
         
-        if self.latitude == 0.0 {
+        if latitude == 0.0 {
             var alert: UIAlertController = UIAlertController(title: "現在の位置を取得できません", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            let tokyo: UIAlertAction = UIAlertAction(title: "東京駅周辺を検索", style: UIAlertActionStyle.Default, handler: { (action:UIAlertAction!) -> Void in
+            let tokyo: UIAlertAction = UIAlertAction(title: "とりあえず東京駅周辺を検索", style: UIAlertActionStyle.Default, handler: { (action:UIAlertAction!) -> Void in
+                //TODO: refactoring resultVCへの遷移をここにも書くの冗長
                 var resultVC = self.storyboard?.instantiateViewControllerWithIdentifier("THResultViewController") as! THResultViewController
                 resultVC.keyword = self.searchTextField.text
                 resultVC.latitude = 35.681
@@ -66,14 +67,15 @@ class THSearchViewController: UIViewController, UITextFieldDelegate, CLLocationM
             let cancel: UIAlertAction = UIAlertAction(title: "キャンセル", style: UIAlertActionStyle.Cancel, handler:{ (action:UIAlertAction!) -> Void in
                 return
             })
+            alert.addAction(tokyo)
             alert.addAction(cancel)
             presentViewController(alert, animated: true, completion: nil)
         }
         
         var resultVC = self.storyboard?.instantiateViewControllerWithIdentifier("THResultViewController") as! THResultViewController
         resultVC.keyword = self.searchTextField.text
-        resultVC.latitude = self.latitude
-        resultVC.longtitude = self.longtitude
+        resultVC.latitude = latitude
+        resultVC.longtitude = longtitude
         self.navigationController?.pushViewController(resultVC, animated: true)
     }
     
@@ -94,8 +96,8 @@ class THSearchViewController: UIViewController, UITextFieldDelegate, CLLocationM
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-        self.latitude = Float(manager.location.coordinate.latitude)
-        self.longtitude = Float(manager.location.coordinate.longitude)
+        latitude = Float(manager.location.coordinate.latitude)
+        longtitude = Float(manager.location.coordinate.longitude)
     }
     
     override func didReceiveMemoryWarning() {

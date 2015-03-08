@@ -10,18 +10,14 @@ import UIKit
 
 class THShop: NSObject {
     var name: String = ""
-    var imageURLStrimg: String = ""
+    var imageURLString: String = ""
     var detailURLString: String = ""
     
     init(dict: [String:AnyObject]) {
-        // TODO: refactoring 入れ子辞書の探索. もっといい方法があるはず.
-        self.name = dict["name"] as! String
-        
-        let photo_ = dict["photo"] as! Dictionary<String, AnyObject>
-        let pc_ = photo_["pc"] as! Dictionary<String, AnyObject>
-        self.imageURLStrimg = pc_["l"] as! String
-        
-        let urls_ = dict["urls"] as! Dictionary<String, AnyObject>
-        self.detailURLString = urls_["pc"] as! String
+        let shopDict = NSDictionary(dictionary: dict)
+        let dict_:Dictionary<String, AnyObject> = shopDict as! Dictionary<String, AnyObject>
+        self.name = shopDict.valueForKeyPath("name") as! String
+        self.imageURLString = shopDict.valueForKeyPath("photo.pc.l") as! String
+        self.detailURLString = shopDict.valueForKeyPath("urls.pc") as! String
     }
 }

@@ -47,10 +47,8 @@ class THResultViewController: UIViewController, UICollectionViewDataSource, UICo
             GOURMET_SEARCH_URL,
             parameters: params,
             success: { (operation:AFHTTPRequestOperation!, responseObject:AnyObject!) -> Void in
-                // TODO: refactoring 入れ子辞書の探索. もっといい方法があるはず.
-                let response = responseObject as! Dictionary<String, AnyObject>
-                let results_ = response["results"] as! Dictionary<String, AnyObject>
-                if let items = results_["shop"] as? Array<Dictionary<String, AnyObject>> {
+                let response = NSDictionary(dictionary:(responseObject as! Dictionary<String, AnyObject>))
+                if let items = response.valueForKeyPath("results.shop") as? Array<Dictionary<String, AnyObject>> {
                     for item in items {
                         self.shops.append(THShop(dict:item))
                     }
@@ -80,7 +78,7 @@ class THResultViewController: UIViewController, UICollectionViewDataSource, UICo
         let shop = shops[indexPath.row]
         cell.nameLabel.text = shop.name
         cell.imageView.sd_setImageWithURL(
-            NSURL(string: shop.imageURLStrimg),
+            NSURL(string: shop.imageURLString),
             completed: { (image: UIImage!, error: NSError!, cacheType: SDImageCacheType, imageURL: NSURL!) -> Void in
                 if cacheType != SDImageCacheType.Memory {
                     UIView.transitionWithView(cell.imageView, duration: 0.28, options:UIViewAnimationOptions.TransitionCrossDissolve | UIViewAnimationOptions.CurveLinear | UIViewAnimationOptions.AllowUserInteraction, animations: { () -> Void in
